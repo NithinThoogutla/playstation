@@ -1,0 +1,3 @@
+.terraform/
+.terraform.lock.hcl
+terraform_plan_output.txt

@@ -1,0 +1,78 @@
+{
+    "name": "Daily-Data-Ingestion-Job",
+    "email_notifications": {
+        "on_failure": [
+            "sainithin559@gmail.com"
+        ],
+        "on_start": [
+            "sainithin559@gmail.com"
+        ],
+        "no_alert_for_skipped_runs": true
+    },
+    "webhook_notifications": {
+        "on_failure": [
+            {
+                "id": "a7d8c21e-9b5f-4d32-841c-b17f549c36d2",
+                "request_url": "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+            }
+        ]
+    },
+    "health": {
+        "rules": [
+            {
+                "metric": "RUN_DURATION_SECONDS",
+                "op": "GREATER_THAN",
+                "value": 3600
+            }
+        ]
+    },
+    "timeout_seconds": 3600,
+    "max_retries": 2,
+    "min_retry_interval_millis": 300000,
+    "retry_on_timeout": true,
+    "tasks": [
+        {
+            "task_key": "Landing_To_Curated_Ingestion",
+            "description": "Ingests raw baseball CSVs from the landing S3 bucket, applies data quality checks (null keys, valid ranges, duplicate detection), and writes clean Parquet tables to the curated S3 bucket.",
+            "spark_python_task": {
+                "python_file": "dbfs:/FileStore/pipelines/ingestion.py",
+                "parameters": [
+                    "--env",
+                    "prod",
+                    "--landing_prefix",
+                    "s3://nithin-data-platform-landing-prod/",
+                    "--curated_prefix",
+                    "s3://nithin-data-platform-curated-prod/"
+                ]
+            },
+            "job_cluster_key": "Ingestion_Pipeline_Cluster",
+            "timeout_seconds": 1800,
+            "max_retries": 2,
+            "min_retry_interval_millis": 300000
+        }
+    ],
+    "job_clusters": [
+        {
+            "job_cluster_key": "Ingestion_Pipeline_Cluster",
+            "new_cluster": {
+                "policy_id": "0B12F8A43E7",
+                "num_workers": 2,
+                "instance_pool_id": "default-cost-optimized-pool",
+                "driver_instance_pool_id": "default-cost-optimized-pool",
+                "spark_version": "13.3.x-scala2.12",
+                "aws_attributes": {
+                    "first_on_demand": 0,
+                    "availability": "SPOT_WITH_FALLBACK",
+                    "instance_profile_arn": "arn:aws:iam::233096558879:instance-profile/databricks-job-profile-dev"
+                },
+                "autotermination_minutes": 15
+            }
+        }
+    ],
+    "format": "MULTI_TASK",
+    "schedule": {
+        "quartz_cron_expression": "0 0 6 * * ?",
+        "timezone_id": "America/Chicago",
+        "pause_status": "UNPAUSED"
+    }
+}

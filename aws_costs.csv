@@ -1,0 +1,17 @@
+date,service,usage_type,amount,App,Env,Owner,CostCenter
+2025-01-05,AmazonEC2,BoxUsage:m5.large,420.00,data-platform,prod,eng-data,1234
+2025-01-05,EC2-Other,EBS:VolumeUsage.gp3,85.50,data-platform,prod,eng-data,1234
+2025-01-05,AmazonS3,TimedStorage-ByteHrs,60.25,data-platform,prod,eng-data,1234
+2025-01-05,AmazonCloudWatch,Metrics,12.00,data-platform,prod,,1234
+2025-01-20,AmazonEC2,BoxUsage:m5.large,180.00,data-platform,dev,eng-data,1234
+2025-01-20,EC2-Other,EBS:VolumeIOPS.gp3,22.40,data-platform,dev,eng-data,
+2025-01-20,AmazonS3,Requests-Tier1,9.90,data-platform,dev,,1234
+2025-01-20,AWSLambda,GB-Second,4.75,data-platform,dev,eng-data,1234
+2025-02-10,AmazonEC2,BoxUsage:m5.large,390.00,data-platform,prod,eng-data,1234
+2025-02-10,EC2-Other,EBS:VolumeUsage.gp3,90.10,data-platform,prod,eng-data,1234
+2025-02-10,AmazonS3,TimedStorage-ByteHrs,63.80,data-platform,prod,eng-data,1234
+2025-02-10,AmazonCloudWatch,Logs,14.60,data-platform,prod,,1234
+2025-02-18,AmazonEC2,SpotUsage:c5.large,95.00,data-platform,dev,eng-data,1234
+2025-02-18,EC2-Other,EBS:VolumeUsage.gp3,18.30,data-platform,dev,eng-data,
+2025-02-18,AmazonS3,Requests-Tier1,10.50,data-platform,dev,,1234
+2025-02-18,AWSKMS,Requests,2.10,data-platform,dev,eng-data,1234

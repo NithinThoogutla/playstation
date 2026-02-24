@@ -1,0 +1,557 @@
+aws_iam_role.databricks_job_role: Refreshing state... [id=databricks-job-execution-role-dev]
+aws_iam_role.cicd_role: Refreshing state... [id=terraform-cicd-role-dev]
+aws_kms_key.s3_key: Refreshing state... [id=7a4bc2db-914e-4ec3-8cd9-da2956402a02]
+aws_budgets_budget.data_platform: Refreshing state... [id=233096558879:DataPlatform-Monthly-Budget]
+aws_s3_bucket.curated: Refreshing state... [id=sports-analytics-curated-dev]
+aws_s3_bucket.landing: Refreshing state... [id=sports-analytics-landing-dev]
+aws_kms_alias.s3_key_alias: Refreshing state... [id=alias/data-platform-s3-key]
+aws_iam_role_policy_attachment.cicd_policy: Refreshing state... [id=terraform-cicd-role-dev-20260223000111218700000001]
+aws_iam_instance_profile.databricks: Refreshing state... [id=databricks-job-profile-dev]
+aws_s3_bucket_versioning.curated: Refreshing state... [id=sports-analytics-curated-dev]
+aws_s3_bucket_public_access_block.curated: Refreshing state... [id=sports-analytics-curated-dev]
+aws_s3_bucket_policy.curated: Refreshing state... [id=sports-analytics-curated-dev]
+aws_s3_bucket_server_side_encryption_configuration.curated: Refreshing state... [id=sports-analytics-curated-dev]
+aws_s3_bucket_server_side_encryption_configuration.landing: Refreshing state... [id=sports-analytics-landing-dev]
+aws_s3_bucket_public_access_block.landing: Refreshing state... [id=sports-analytics-landing-dev]
+aws_s3_bucket_policy.landing: Refreshing state... [id=sports-analytics-landing-dev]
+aws_s3_bucket_lifecycle_configuration.landing: Refreshing state... [id=sports-analytics-landing-dev]
+aws_iam_role_policy.databricks_job_policy: Refreshing state... [id=databricks-job-execution-role-dev:databricks-s3-rw-policy]
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+-/+ destroy and then create replacement
+ <= read (data resources)
+
+Terraform will perform the following actions:
+
+  # data.aws_iam_policy_document.curated_bucket_policy will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "curated_bucket_policy" {
+      + id            = (known after apply)
+      + json          = (known after apply)
+      + minified_json = (known after apply)
+
+      + statement {
+          + actions   = [
+              + "s3:*",
+            ]
+          + effect    = "Deny"
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+            ]
+          + sid       = "AllowSSLRequestsOnly"
+
+          + condition {
+              + test     = "Bool"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:SecureTransport"
+            }
+
+          + principals {
+              + identifiers = [
+                  + "*",
+                ]
+              + type        = "AWS"
+            }
+        }
+    }
+
+  # data.aws_iam_policy_document.databricks_s3_access will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "databricks_s3_access" {
+      + id            = (known after apply)
+      + json          = (known after apply)
+      + minified_json = (known after apply)
+
+      + statement {
+          + actions   = [
+              + "s3:GetObject",
+              + "s3:ListBucket",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+            ]
+          + sid       = "ReadLandingBucket"
+        }
+      + statement {
+          + actions   = [
+              + "s3:DeleteObject",
+              + "s3:GetObject",
+              + "s3:ListBucket",
+              + "s3:PutObject",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+            ]
+          + sid       = "ReadWriteCuratedBucket"
+        }
+      + statement {
+          + actions   = [
+              + "kms:Decrypt",
+              + "kms:DescribeKey",
+              + "kms:GenerateDataKey",
+            ]
+          + effect    = "Allow"
+          + resources = [
+              + "arn:aws:kms:us-east-1:233096558879:key/7a4bc2db-914e-4ec3-8cd9-da2956402a02",
+            ]
+          + sid       = "KMSEncryptDecrypt"
+        }
+    }
+
+  # data.aws_iam_policy_document.landing_bucket_policy will be read during apply
+  # (config refers to values not yet known)
+ <= data "aws_iam_policy_document" "landing_bucket_policy" {
+      + id            = (known after apply)
+      + json          = (known after apply)
+      + minified_json = (known after apply)
+
+      + statement {
+          + actions   = [
+              + "s3:*",
+            ]
+          + effect    = "Deny"
+          + resources = [
+              + (known after apply),
+              + (known after apply),
+            ]
+          + sid       = "AllowSSLRequestsOnly"
+
+          + condition {
+              + test     = "Bool"
+              + values   = [
+                  + "false",
+                ]
+              + variable = "aws:SecureTransport"
+            }
+
+          + principals {
+              + identifiers = [
+                  + "*",
+                ]
+              + type        = "AWS"
+            }
+        }
+    }
+
+  # aws_budgets_budget.data_platform will be updated in-place
+  ~ resource "aws_budgets_budget" "data_platform" {
+        id                = "233096558879:DataPlatform-Monthly-Budget"
+        name              = "DataPlatform-Monthly-Budget"
+        tags              = {}
+        # (10 unchanged attributes hidden)
+
+      - notification {
+          - comparison_operator        = "GREATER_THAN" -> null
+          - notification_type          = "ACTUAL" -> null
+          - subscriber_email_addresses = [
+              - "nithin.alerts@data-platform.internal",
+            ] -> null
+          - subscriber_sns_topic_arns  = [] -> null
+          - threshold                  = 80 -> null
+          - threshold_type             = "PERCENTAGE" -> null
+        }
+      + notification {
+          + comparison_operator        = "GREATER_THAN"
+          + notification_type          = "ACTUAL"
+          + subscriber_email_addresses = [
+              + "sainithin559@gmail.com",
+            ]
+          + subscriber_sns_topic_arns  = []
+          + threshold                  = 80
+          + threshold_type             = "PERCENTAGE"
+        }
+
+        # (2 unchanged blocks hidden)
+    }
+
+  # aws_iam_role.cicd_role will be updated in-place
+  ~ resource "aws_iam_role" "cicd_role" {
+      ~ assume_role_policy    = jsonencode(
+          ~ {
+              ~ Statement = [
+                  ~ {
+                      ~ Principal = {
+                          ~ Federated = "arn:aws:iam::987654321012:oidc-provider/token.actions.githubusercontent.com" -> "arn:aws:iam::233096558879:oidc-provider/token.actions.githubusercontent.com"
+                        }
+                        # (3 unchanged attributes hidden)
+                    },
+                ]
+                # (1 unchanged attribute hidden)
+            }
+        )
+        id                    = "terraform-cicd-role-dev"
+        name                  = "terraform-cicd-role-dev"
+        tags                  = {}
+        # (11 unchanged attributes hidden)
+    }
+
+  # aws_iam_role_policy.databricks_job_policy will be updated in-place
+  ~ resource "aws_iam_role_policy" "databricks_job_policy" {
+        id          = "databricks-job-execution-role-dev:databricks-s3-rw-policy"
+        name        = "databricks-s3-rw-policy"
+      ~ policy      = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action   = [
+                          - "s3:ListBucket",
+                          - "s3:GetObject",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = [
+                          - "arn:aws:s3:::sports-analytics-landing-dev/*",
+                          - "arn:aws:s3:::sports-analytics-landing-dev",
+                        ]
+                      - Sid      = "ReadLandingBucket"
+                    },
+                  - {
+                      - Action   = [
+                          - "s3:PutObject",
+                          - "s3:ListBucket",
+                          - "s3:GetObject",
+                          - "s3:DeleteObject",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = [
+                          - "arn:aws:s3:::sports-analytics-curated-dev/*",
+                          - "arn:aws:s3:::sports-analytics-curated-dev",
+                        ]
+                      - Sid      = "ReadWriteCuratedBucket"
+                    },
+                  - {
+                      - Action   = [
+                          - "kms:GenerateDataKey",
+                          - "kms:DescribeKey",
+                          - "kms:Decrypt",
+                        ]
+                      - Effect   = "Allow"
+                      - Resource = "arn:aws:kms:us-east-1:233096558879:key/7a4bc2db-914e-4ec3-8cd9-da2956402a02"
+                      - Sid      = "KMSEncryptDecrypt"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+        # (2 unchanged attributes hidden)
+    }
+
+  # aws_s3_bucket.curated must be replaced
+-/+ resource "aws_s3_bucket" "curated" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      ~ arn                         = "arn:aws:s3:::sports-analytics-curated-dev" -> (known after apply)
+      ~ bucket                      = "sports-analytics-curated-dev" -> "nithin-data-platform-curated-dev" # forces replacement
+      ~ bucket_domain_name          = "sports-analytics-curated-dev.s3.amazonaws.com" -> (known after apply)
+      + bucket_prefix               = (known after apply)
+      ~ bucket_regional_domain_name = "sports-analytics-curated-dev.s3.us-east-1.amazonaws.com" -> (known after apply)
+      ~ hosted_zone_id              = "Z3AQBSTGFYJSTF" -> (known after apply)
+      ~ id                          = "sports-analytics-curated-dev" -> (known after apply)
+      ~ object_lock_enabled         = false -> (known after apply)
+      ~ policy                      = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - "aws:SecureTransport" = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::sports-analytics-curated-dev/*",
+                          - "arn:aws:s3:::sports-analytics-curated-dev",
+                        ]
+                      - Sid       = "AllowSSLRequestsOnly"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+      ~ region                      = "us-east-1" -> (known after apply)
+      ~ request_payer               = "BucketOwner" -> (known after apply)
+        tags                        = {
+            "App"        = "DataPlatform"
+            "CostCenter" = "dataplatform-101"
+            "Env"        = "dev"
+            "Owner"      = "data-engineering-team"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+        # (2 unchanged attributes hidden)
+
+      ~ cors_rule (known after apply)
+
+      ~ grant (known after apply)
+      - grant {
+          - id          = "4ecd379ba31199c97b26a478ed0061207c623e309d71170e69694c9e24843631" -> null
+          - permissions = [
+              - "FULL_CONTROL",
+            ] -> null
+          - type        = "CanonicalUser" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      ~ lifecycle_rule (known after apply)
+
+      ~ logging (known after apply)
+
+      ~ object_lock_configuration (known after apply)
+
+      ~ replication_configuration (known after apply)
+
+      ~ server_side_encryption_configuration (known after apply)
+      - server_side_encryption_configuration {
+          - rule {
+              - bucket_key_enabled = true -> null
+
+              - apply_server_side_encryption_by_default {
+                  - kms_master_key_id = "arn:aws:kms:us-east-1:233096558879:key/7a4bc2db-914e-4ec3-8cd9-da2956402a02" -> null
+                  - sse_algorithm     = "aws:kms" -> null
+                }
+            }
+        }
+
+      ~ versioning (known after apply)
+      - versioning {
+          - enabled    = true -> null
+          - mfa_delete = false -> null
+        }
+
+      ~ website (known after apply)
+    }
+
+  # aws_s3_bucket.landing must be replaced
+-/+ resource "aws_s3_bucket" "landing" {
+      + acceleration_status         = (known after apply)
+      + acl                         = (known after apply)
+      ~ arn                         = "arn:aws:s3:::sports-analytics-landing-dev" -> (known after apply)
+      ~ bucket                      = "sports-analytics-landing-dev" -> "nithin-data-platform-landing-dev" # forces replacement
+      ~ bucket_domain_name          = "sports-analytics-landing-dev.s3.amazonaws.com" -> (known after apply)
+      + bucket_prefix               = (known after apply)
+      ~ bucket_regional_domain_name = "sports-analytics-landing-dev.s3.us-east-1.amazonaws.com" -> (known after apply)
+      ~ hosted_zone_id              = "Z3AQBSTGFYJSTF" -> (known after apply)
+      ~ id                          = "sports-analytics-landing-dev" -> (known after apply)
+      ~ object_lock_enabled         = false -> (known after apply)
+      ~ policy                      = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - "aws:SecureTransport" = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::sports-analytics-landing-dev/*",
+                          - "arn:aws:s3:::sports-analytics-landing-dev",
+                        ]
+                      - Sid       = "AllowSSLRequestsOnly"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+      ~ region                      = "us-east-1" -> (known after apply)
+      ~ request_payer               = "BucketOwner" -> (known after apply)
+        tags                        = {
+            "App"        = "DataPlatform"
+            "CostCenter" = "dataplatform-101"
+            "Env"        = "dev"
+            "Owner"      = "data-engineering-team"
+        }
+      + website_domain              = (known after apply)
+      + website_endpoint            = (known after apply)
+        # (2 unchanged attributes hidden)
+
+      ~ cors_rule (known after apply)
+
+      ~ grant (known after apply)
+      - grant {
+          - id          = "4ecd379ba31199c97b26a478ed0061207c623e309d71170e69694c9e24843631" -> null
+          - permissions = [
+              - "FULL_CONTROL",
+            ] -> null
+          - type        = "CanonicalUser" -> null
+            # (1 unchanged attribute hidden)
+        }
+
+      ~ lifecycle_rule (known after apply)
+      - lifecycle_rule {
+          - abort_incomplete_multipart_upload_days = 0 -> null
+          - enabled                                = true -> null
+          - id                                     = "delete-raw-after-14-days" -> null
+          - tags                                   = {} -> null
+            # (1 unchanged attribute hidden)
+
+          - expiration {
+              - days                         = 14 -> null
+              - expired_object_delete_marker = false -> null
+                # (1 unchanged attribute hidden)
+            }
+        }
+
+      ~ logging (known after apply)
+
+      ~ object_lock_configuration (known after apply)
+
+      ~ replication_configuration (known after apply)
+
+      ~ server_side_encryption_configuration (known after apply)
+      - server_side_encryption_configuration {
+          - rule {
+              - bucket_key_enabled = true -> null
+
+              - apply_server_side_encryption_by_default {
+                  - kms_master_key_id = "arn:aws:kms:us-east-1:233096558879:key/7a4bc2db-914e-4ec3-8cd9-da2956402a02" -> null
+                  - sse_algorithm     = "aws:kms" -> null
+                }
+            }
+        }
+
+      ~ versioning (known after apply)
+      - versioning {
+          - enabled    = false -> null
+          - mfa_delete = false -> null
+        }
+
+      ~ website (known after apply)
+    }
+
+  # aws_s3_bucket_lifecycle_configuration.landing must be replaced
+-/+ resource "aws_s3_bucket_lifecycle_configuration" "landing" {
+      ~ bucket                                 = "sports-analytics-landing-dev" -> (known after apply) # forces replacement
+      + expected_bucket_owner                  = (known after apply)
+      ~ id                                     = "sports-analytics-landing-dev" -> (known after apply)
+        # (1 unchanged attribute hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # aws_s3_bucket_policy.curated must be replaced
+-/+ resource "aws_s3_bucket_policy" "curated" {
+      ~ bucket = "sports-analytics-curated-dev" -> (known after apply) # forces replacement
+      ~ id     = "sports-analytics-curated-dev" -> (known after apply)
+      ~ policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - "aws:SecureTransport" = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::sports-analytics-curated-dev/*",
+                          - "arn:aws:s3:::sports-analytics-curated-dev",
+                        ]
+                      - Sid       = "AllowSSLRequestsOnly"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+    }
+
+  # aws_s3_bucket_policy.landing must be replaced
+-/+ resource "aws_s3_bucket_policy" "landing" {
+      ~ bucket = "sports-analytics-landing-dev" -> (known after apply) # forces replacement
+      ~ id     = "sports-analytics-landing-dev" -> (known after apply)
+      ~ policy = jsonencode(
+            {
+              - Statement = [
+                  - {
+                      - Action    = "s3:*"
+                      - Condition = {
+                          - Bool = {
+                              - "aws:SecureTransport" = "false"
+                            }
+                        }
+                      - Effect    = "Deny"
+                      - Principal = {
+                          - AWS = "*"
+                        }
+                      - Resource  = [
+                          - "arn:aws:s3:::sports-analytics-landing-dev/*",
+                          - "arn:aws:s3:::sports-analytics-landing-dev",
+                        ]
+                      - Sid       = "AllowSSLRequestsOnly"
+                    },
+                ]
+              - Version   = "2012-10-17"
+            }
+        ) -> (known after apply)
+    }
+
+  # aws_s3_bucket_public_access_block.curated must be replaced
+-/+ resource "aws_s3_bucket_public_access_block" "curated" {
+      ~ bucket                  = "sports-analytics-curated-dev" -> (known after apply) # forces replacement
+      ~ id                      = "sports-analytics-curated-dev" -> (known after apply)
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_s3_bucket_public_access_block.landing must be replaced
+-/+ resource "aws_s3_bucket_public_access_block" "landing" {
+      ~ bucket                  = "sports-analytics-landing-dev" -> (known after apply) # forces replacement
+      ~ id                      = "sports-analytics-landing-dev" -> (known after apply)
+        # (4 unchanged attributes hidden)
+    }
+
+  # aws_s3_bucket_server_side_encryption_configuration.curated must be replaced
+-/+ resource "aws_s3_bucket_server_side_encryption_configuration" "curated" {
+      ~ bucket                = "sports-analytics-curated-dev" -> (known after apply) # forces replacement
+      ~ id                    = "sports-analytics-curated-dev" -> (known after apply)
+        # (1 unchanged attribute hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # aws_s3_bucket_server_side_encryption_configuration.landing must be replaced
+-/+ resource "aws_s3_bucket_server_side_encryption_configuration" "landing" {
+      ~ bucket                = "sports-analytics-landing-dev" -> (known after apply) # forces replacement
+      ~ id                    = "sports-analytics-landing-dev" -> (known after apply)
+        # (1 unchanged attribute hidden)
+
+        # (1 unchanged block hidden)
+    }
+
+  # aws_s3_bucket_versioning.curated must be replaced
+-/+ resource "aws_s3_bucket_versioning" "curated" {
+      ~ bucket                = "sports-analytics-curated-dev" -> (known after apply) # forces replacement
+      ~ id                    = "sports-analytics-curated-dev" -> (known after apply)
+        # (1 unchanged attribute hidden)
+
+      ~ versioning_configuration {
+          + mfa_delete = (known after apply)
+            # (1 unchanged attribute hidden)
+        }
+    }
+
+Plan: 10 to add, 3 to change, 10 to destroy.
+
+─────────────────────────────────────────────────────────────────────────────
+
+Note: You didn't use the -out option to save this plan, so Terraform can't
+guarantee to take exactly these actions if you run "terraform apply" now.

@@ -1,0 +1,20 @@
+{
+    "instance_pool_name": "Cost-Optimized-Ingestion-Pool",
+    "node_type_id": "m5.xlarge",
+    "min_idle_instances": 0,
+    "max_capacity": 4,
+    "idle_instance_autotermination_minutes": 10,
+    "aws_attributes": {
+        "availability": "SPOT_WITH_FALLBACK",
+        "zone_id": "auto",
+        "spot_bid_price_percent": 60
+    },
+    "custom_tags": {
+        "App": "DataPlatform",
+        "CostCenter": "dataplatform-101",
+        "ManagedBy": "Terraform"
+    },
+    "preloaded_spark_versions": [
+        "13.3.x-scala2.12"
+    ]
+}

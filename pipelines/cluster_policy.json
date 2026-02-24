@@ -1,0 +1,53 @@
+{
+  "autotermination_minutes": {
+    "type": "fixed",
+    "value": 15
+  },
+  "cluster_type": {
+    "type": "fixed",
+    "value": "job"
+  },
+  "spark_version": {
+    "type": "regex",
+    "pattern": "13\\.3\\.x-scala.*",
+    "hidden": false
+  },
+  "node_type_id": {
+    "type": "allowlist",
+    "values": [
+      "i3.xlarge",
+      "r5.xlarge",
+      "m5.xlarge"
+    ],
+    "defaultValue": "m5.xlarge"
+  },
+  "driver_node_type_id": {
+    "type": "fixed",
+    "value": "m5.xlarge",
+    "hidden": false
+  },
+  "num_workers": {
+    "type": "range",
+    "minValue": 1,
+    "maxValue": 8,
+    "defaultValue": 2
+  },
+  "instance_pool_id": {
+    "type": "fixed",
+    "value": "default-cost-optimized-pool",
+    "hidden": false
+  },
+  "driver_instance_pool_id": {
+    "type": "fixed",
+    "value": "default-cost-optimized-pool",
+    "hidden": false
+  },
+  "data_security_mode": {
+    "type": "fixed",
+    "value": "USER_ISOLATION"
+  },
+  "custom_tags.CostCenter": {
+    "type": "fixed",
+    "value": "dataplatform-101"
+  }
+}
