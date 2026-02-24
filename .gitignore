@@ -1,4 +1,4 @@
 data/curated/
 .env
-!.env.example
+!.env
 .DS_Store
